@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: murder-mystery-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python3 server.py --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: MM_API_KEY          # 용의자 대사 — 키는 서버에만 둔다
+        sync: false
+      - key: ALLOW_ORIGINS       # 예: https://murder-mystery-ui.vercel.app
+        sync: false

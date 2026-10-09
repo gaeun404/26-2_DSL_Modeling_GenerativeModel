@@ -1,0 +1,70 @@
+<svg width="170" height="170" viewBox="0 0 170 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!--
+    대질 아이콘.
+
+    다른 메뉴 아이콘(지도·수첩·지목)은 청동 질감 래스터인데, 대질만 아이콘이
+    없어서 세 사람 그림을 끌어다 쓰고 있었다 — 「맞대 놓는다」로 읽히지 않는다.
+
+    마주 본 두 사람과 그 사이의 어긋난 금. 색은 같은 청동으로 맞췄다.
+  -->
+  <defs>
+    <linearGradient id="bronze" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d8bd8e"/>
+      <stop offset="0.45" stop-color="#b4956097"/>
+      <stop offset="0.46" stop-color="#b49560"/>
+      <stop offset="1" stop-color="#7d6337"/>
+    </linearGradient>
+    <linearGradient id="bronzeDim" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c2a67a"/>
+      <stop offset="1" stop-color="#6d552f"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 왼쪽 사람 — 오른쪽을 본다 -->
+  <g stroke="#2a1f12" stroke-width="3.5" stroke-linejoin="round">
+    <path
+      fill="url(#bronze)"
+      d="M46 44
+         c11 0 19 9 19 20
+         c0 8-4 15-10 18
+         c14 4 23 15 23 29
+         v13
+         H12
+         v-13
+         c0-14 9-25 23-29
+         c-6-3-10-10-10-18
+         c0-11 8-20 19-20 Z"/>
+  </g>
+
+  <!-- 오른쪽 사람 — 왼쪽을 본다 (조금 뒤로 물러서 있다) -->
+  <g stroke="#2a1f12" stroke-width="3.5" stroke-linejoin="round">
+    <path
+      fill="url(#bronzeDim)"
+      d="M124 52
+         c10 0 17 8 17 18
+         c0 7-3 13-9 16
+         c13 4 21 14 21 26
+         v12
+         H95
+         v-12
+         c0-12 8-22 21-26
+         c-6-3-9-9-9-16
+         c0-10 7-18 17-18 Z"/>
+  </g>
+
+  <!-- 사이에 난 금 — 말이 어긋난다 -->
+  <path
+    d="M85 26 L78 62 L92 82 L79 108 L88 148"
+    stroke="#2a1f12"
+    stroke-width="9"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"/>
+  <path
+    d="M85 26 L78 62 L92 82 L79 108 L88 148"
+    stroke="#e0c793"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"/>
+</svg>

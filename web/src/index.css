@@ -1,0 +1,169 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-game:
+    "Noto Serif KR",
+    Georgia,
+    "Times New Roman",
+    "AppleMyungjo",
+    serif;
+
+  --font-game-korean:
+    "Noto Serif KR",
+    "AppleMyungjo",
+    Georgia,
+    serif;
+
+  --font-serif:
+    "Noto Serif KR",
+    "AppleMyungjo",
+    Georgia,
+    serif;
+
+  --text-game-xs: 14px;
+  --text-game-sm: 16px;
+  --text-game-base: 18px;
+  --text-game-lg: 22px;
+  --text-game-xl: 28px;
+  --text-game-2xl: 38px;
+  --text-game-title: 64px;
+
+  --color-game-black: #080807;
+  --color-game-bg: #0b0a09;
+  --color-game-panel: #11100e;
+
+  --color-game-ivory: #eee9df;
+  --color-game-parchment: #d2c5aa;
+  --color-game-muted: #8f8676;
+
+  --color-game-gold: #806c45;
+  --color-game-gold-dark: #55452c;
+
+  --color-game-red: #6e2924;
+  --color-game-red-light: #8a3830;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+}
+
+.viewport-frame {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: var(--color-game-bg);
+}
+
+.viewport-canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1440px;
+  height: 1024px;
+  transform-origin: center;
+}
+
+body {
+  background: var(--color-game-bg);
+  color: var(--color-game-ivory);
+  font-family: var(--font-game-korean);
+}
+
+button {
+  font: inherit;
+}
+
+/*
+  피해자 카드의 소개글은 종이 안에서 굴려 읽는다.
+  기본 스크롤막대는 이 종이 위에서 너무 튀어서, 얇은 갈색 줄로 바꾼다.
+  (굴릴 것이 있다는 표시이기도 하다 — 아예 안 보이면 아무도 안 굴린다.)
+*/
+.victim-bio {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(94, 72, 48, 0.45) transparent;
+}
+
+.victim-bio::-webkit-scrollbar {
+  width: 6px;
+}
+
+.victim-bio::-webkit-scrollbar-thumb {
+  background: rgba(94, 72, 48, 0.45);
+}
+
+/* 어두운 바탕 위의 가느다란 스크롤 막대 — 단서 팝업처럼 글이 넘칠 수 있는 자리 */
+.thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(216, 205, 180, 0.35) transparent;
+}
+
+.thin-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: rgba(216, 205, 180, 0.35);
+}
+
+/* 진상 — 쪽을 넘길 때 그림이 스며들듯 바뀐다 */
+@keyframes reveal-cut-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.reveal-cut-in {
+  animation: reveal-cut-in 0.7s ease-in-out;
+}
+
+@keyframes event-screen-shake {
+  0%, 100% { transform: translate(0); }
+  12% { transform: translate(-10px, 5px); }
+  25% { transform: translate(9px, -6px); }
+  38% { transform: translate(-7px, -4px); }
+  52% { transform: translate(8px, 5px); }
+  66% { transform: translate(-5px, 3px); }
+  80% { transform: translate(4px, -2px); }
+}
+
+.event-screen-shake {
+  animation: event-screen-shake 0.7s ease-in-out 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .event-screen-shake {
+    animation: none;
+  }
+}
+
+/*
+  정곡을 찔린 순간 — 대답이 한 번 붉게 번졌다 가라앉는다.
+
+  ★왜 (2026-08-31, 제보 — "비밀 정곡 찔리면 채팅 붉은색 효과").
+    비밀이 열리는 순간은 이 게임에서 가장 중요한 한 번인데, 여태 회색
+    글자 한 줄로 지나갔다. 색이 남아 있으면 어느 대답에서 열렸는지
+    나중에도 짚을 수 있다 — 번쩍이고 마는 대신 옅은 붉은 기를 남긴다.
+*/
+@keyframes secret-struck {
+  0%   { background-color: rgba(155, 58, 49, 0.55); }
+  60%  { background-color: rgba(155, 58, 49, 0.22); }
+  100% { background-color: rgba(155, 58, 49, 0.10); }
+}
+
+.secret-struck {
+  animation: secret-struck 1100ms ease-out both;
+  border-left: 3px solid #9b3a31;
+  padding: 10px 14px;
+}

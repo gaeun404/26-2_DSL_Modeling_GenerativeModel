@@ -1,0 +1,1036 @@
+<title>머더미스터리 설계서</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700&family=Noto+Sans+KR:wght@350;400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+  :root{
+    --bg:#F6F6F3; --surface:#FFFFFF; --surface-2:#F0F0EC;
+    --ink:#15171B; --ink-2:#3D4249; --muted:#6B7078;
+    --line:#E0E0DA; --line-2:#CFCFC7;
+    --accent:#8A5A2B; --accent-soft:#F0E4D4;
+    --good:#2F6B4F; --warn:#8A5A2B; --bad:#95331F;
+    --serif:"Noto Serif KR",Georgia,"Apple SD Gothic Neo",serif;
+    --sans:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#121317; --surface:#181A1E; --surface-2:#1E2126;
+      --ink:#E9E8E4; --ink-2:#C3C5C9; --muted:#949AA2;
+      --line:#282B31; --line-2:#363A41;
+      --accent:#CB9C60; --accent-soft:#2A231A;
+      --good:#6FB58F; --warn:#CB9C60; --bad:#D8735A;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#121317; --surface:#181A1E; --surface-2:#1E2126;
+    --ink:#E9E8E4; --ink-2:#C3C5C9; --muted:#949AA2;
+    --line:#282B31; --line-2:#363A41;
+    --accent:#CB9C60; --accent-soft:#2A231A;
+    --good:#6FB58F; --warn:#CB9C60; --bad:#D8735A;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:var(--sans); font-weight:350; line-height:1.75;
+    font-size:16px; margin:0;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px; margin:0 auto; padding:0 24px 120px}
+
+  /* ── 표제 ─────────────────────────────── */
+  header{padding:72px 0 44px; border-bottom:1px solid var(--line)}
+  .kicker{
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--muted); margin:0 0 18px;
+  }
+  h1{
+    font-family:var(--serif); font-weight:700; font-size:clamp(30px,5vw,44px);
+    line-height:1.25; margin:0 0 16px; letter-spacing:-.01em; text-wrap:balance;
+  }
+  .lede{font-size:17px; color:var(--ink-2); margin:0; max-width:60ch}
+  .stamp{
+    margin-top:26px; font-family:var(--mono); font-size:12px; color:var(--muted);
+    display:flex; flex-wrap:wrap; gap:6px 20px;
+  }
+
+  /* ── 목차 ─────────────────────────────── */
+  nav.toc{
+    margin:36px 0 0; padding:22px 26px;
+    background:var(--surface); border:1px solid var(--line); border-radius:3px;
+  }
+  nav.toc h2{
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--muted); margin:0 0 14px; font-weight:500;
+  }
+  nav.toc ol{margin:0; padding:0; list-style:none; display:grid; gap:7px}
+  @media(min-width:640px){nav.toc ol{grid-template-columns:1fr 1fr; gap:7px 32px}}
+  nav.toc li{display:flex; gap:12px; font-size:14.5px}
+  nav.toc .n{font-family:var(--mono); color:var(--accent); font-size:12.5px; padding-top:2px}
+  nav.toc a{color:var(--ink-2); text-decoration:none; border-bottom:1px solid transparent}
+  nav.toc a:hover{color:var(--ink); border-bottom-color:var(--line-2)}
+
+  /* ── 절 ───────────────────────────────── */
+  section{padding-top:64px}
+  h2.sec{
+    font-family:var(--serif); font-weight:700; font-size:25px; line-height:1.35;
+    margin:0 0 8px; letter-spacing:-.01em; display:flex; gap:14px; align-items:baseline;
+  }
+  h2.sec .n{font-family:var(--mono); font-size:13px; color:var(--accent); font-weight:500}
+  .sec-note{color:var(--muted); font-size:14.5px; margin:0 0 26px; padding-left:36px}
+  h3{
+    font-family:var(--serif); font-weight:700; font-size:17.5px;
+    margin:38px 0 12px; letter-spacing:-.005em;
+  }
+  h4{
+    font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--muted); font-weight:500; margin:28px 0 10px;
+  }
+  p{margin:0 0 15px; max-width:66ch}
+  ul,ol{margin:0 0 15px; padding-left:22px; max-width:66ch}
+  li{margin-bottom:7px}
+  strong{font-weight:700; color:var(--ink)}
+  em{font-style:normal; color:var(--accent); font-weight:500}
+  code{
+    font-family:var(--mono); font-size:12.5px; background:var(--surface-2);
+    padding:1.5px 5px; border-radius:2px; color:var(--ink-2);
+  }
+  a{color:var(--accent)}
+  hr{border:0; border-top:1px solid var(--line); margin:44px 0}
+
+  /* ── 상자 ─────────────────────────────── */
+  .card{
+    background:var(--surface); border:1px solid var(--line);
+    border-radius:3px; padding:24px 26px; margin:22px 0;
+  }
+  .rule-sheet{
+    background:var(--surface); border:1px solid var(--line-2);
+    border-radius:3px; padding:34px 38px; margin:24px 0;
+    box-shadow:0 1px 0 var(--line);
+  }
+  .rule-sheet h3:first-child{margin-top:0}
+  .rule-sheet ol{counter-reset:r; list-style:none; padding-left:0; max-width:none}
+  .rule-sheet ol>li{
+    counter-increment:r; position:relative; padding-left:38px; margin-bottom:16px;
+  }
+  .rule-sheet ol>li::before{
+    content:counter(r,decimal-leading-zero);
+    position:absolute; left:0; top:1px;
+    font-family:var(--mono); font-size:12px; color:var(--accent);
+  }
+  .callout{
+    border-left:2px solid var(--accent); background:var(--accent-soft);
+    padding:16px 20px; margin:22px 0; border-radius:0 3px 3px 0;
+  }
+  .callout p:last-child{margin-bottom:0}
+  .callout .lbl{
+    font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--accent); display:block; margin-bottom:6px;
+  }
+
+  /* ── 지표 ─────────────────────────────── */
+  .stats{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(112px,1fr));
+    gap:1px; background:var(--line); border:1px solid var(--line);
+    border-radius:3px; overflow:hidden; margin:26px 0;
+  }
+  .stat{background:var(--surface); padding:16px 18px}
+  .stat .v{
+    font-family:var(--mono); font-size:22px; font-weight:500;
+    color:var(--ink); letter-spacing:-.02em; font-variant-numeric:tabular-nums;
+  }
+  .stat .k{font-size:12px; color:var(--muted); margin-top:3px}
+
+  /* ── 표 ───────────────────────────────── */
+  .scroll{overflow-x:auto; margin:20px 0; border:1px solid var(--line); border-radius:3px}
+  table{border-collapse:collapse; width:100%; font-size:14px; background:var(--surface)}
+  th,td{padding:10px 14px; text-align:left; border-bottom:1px solid var(--line); vertical-align:top}
+  th{
+    font-family:var(--mono); font-size:11px; letter-spacing:.07em; text-transform:uppercase;
+    color:var(--muted); font-weight:500; background:var(--surface-2); white-space:nowrap;
+  }
+  tbody tr:last-child td{border-bottom:0}
+  td.mono,th.mono{font-family:var(--mono); font-size:12.5px; white-space:nowrap}
+  .num{font-variant-numeric:tabular-nums; text-align:right}
+
+  .pill{
+    display:inline-block; font-family:var(--mono); font-size:10.5px;
+    letter-spacing:.06em; padding:2px 7px; border-radius:2px;
+    border:1px solid var(--line-2); color:var(--muted); white-space:nowrap;
+  }
+  .pill.auto{border-color:var(--good); color:var(--good)}
+  .pill.search{border-color:var(--accent); color:var(--accent)}
+  .pill.talk{border-color:var(--bad); color:var(--bad)}
+  .pill.note{border-color:var(--line-2); color:var(--muted)}
+
+  /* ── 와이어프레임 ─────────────────────── */
+  .wf{
+    background:var(--surface-2); border:1px solid var(--line);
+    border-radius:3px; padding:14px; margin:16px 0;
+    font-family:var(--mono); font-size:11.5px; color:var(--muted); line-height:1.5;
+  }
+  .wf .box{
+    border:1px dashed var(--line-2); border-radius:2px;
+    padding:9px 11px; margin-bottom:7px; background:var(--surface);
+  }
+  .wf .box:last-child{margin-bottom:0}
+  .wf .row{display:flex; gap:7px}
+  .wf .row>.box{flex:1; margin-bottom:7px}
+  .wf b{color:var(--ink-2); font-weight:500}
+
+  /* ── 화면 목록 ────────────────────────── */
+  .screen{
+    border:1px solid var(--line); border-radius:3px; background:var(--surface);
+    padding:20px 22px; margin:14px 0;
+  }
+  .screen>header{
+    padding:0 0 12px; border-bottom:1px solid var(--line); margin-bottom:14px;
+    display:flex; gap:12px; align-items:baseline; flex-wrap:wrap;
+  }
+  .screen .id{font-family:var(--mono); font-size:11.5px; color:var(--accent)}
+  .screen .nm{font-family:var(--serif); font-weight:700; font-size:16.5px}
+  .screen .cost{margin-left:auto}
+  .screen dl{margin:0; display:grid; grid-template-columns:auto 1fr; gap:6px 16px; font-size:14px}
+  .screen dt{
+    font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--muted); padding-top:3px; white-space:nowrap;
+  }
+  .screen dd{margin:0; color:var(--ink-2)}
+
+  pre{
+    background:var(--surface-2); border:1px solid var(--line); border-radius:3px;
+    padding:16px 18px; overflow-x:auto; font-family:var(--mono);
+    font-size:12.5px; line-height:1.65; color:var(--ink-2); margin:16px 0;
+  }
+  pre .c{color:var(--muted)}
+
+  .fix{border-bottom:1px solid var(--line); padding:16px 0}
+  .fix:last-child{border-bottom:0}
+  .fix .h{font-weight:500; margin-bottom:5px; color:var(--ink)}
+  .fix .b{font-size:14px; color:var(--ink-2)}
+  .fix .b .was{color:var(--muted)}
+
+  footer{
+    margin-top:80px; padding-top:26px; border-top:1px solid var(--line);
+    font-size:13px; color:var(--muted);
+  }
+</style>
+
+<div class="wrap">
+
+<header>
+  <p class="kicker">설계서 · 2026.08.25</p>
+  <h1>생성형 머더미스터리<br>전체 설계와 화면 명세</h1>
+  <p class="lede">
+    다섯 명의 AI 용의자를 상대로 세 라운드 안에 범인을 짚는 추리 게임이다.
+    이 문서는 플레이어에게 보여줄 규칙, 한 판이 굴러가는 방식,
+    화면 스무 개의 앞뒤 명세, 그리고 프론트가 백엔드에 무엇을 묻고 무엇을 돌려받는지를 담는다.
+  </p>
+  <div class="stamp">
+    <span>시나리오 50편</span><span>검증 8종 전부 통과</span><span>기준 편 · 91 여섯 잔의 회의</span>
+  </div>
+</header>
+
+<nav class="toc">
+  <h2>차례</h2>
+  <ol>
+    <li><span class="n">01</span><a href="#s1">플레이어에게 보여줄 규칙</a></li>
+    <li><span class="n">02</span><a href="#s2">한 판의 구조</a></li>
+    <li><span class="n">03</span><a href="#s3">행동 예산</a></li>
+    <li><span class="n">04</span><a href="#s4">단서가 들어오는 네 갈래</a></li>
+    <li><span class="n">05</span><a href="#s5">첫 대면 알리바이</a></li>
+    <li><span class="n">06</span><a href="#s6">중반 이벤트</a></li>
+    <li><span class="n">07</span><a href="#s7">대질</a></li>
+    <li><span class="n">08</span><a href="#s8">지목과 채점</a></li>
+    <li><span class="n">09</span><a href="#s9">화면 스무 개</a></li>
+    <li><span class="n">10</span><a href="#s10">백엔드 계약</a></li>
+    <li><span class="n">11</span><a href="#s11">프론트가 지켜야 할 것</a></li>
+    <li><span class="n">12</span><a href="#s12">8월 25일 수정 내역</a></li>
+  </ol>
+</nav>
+
+
+<section id="s1">
+  <h2 class="sec"><span class="n">01</span>플레이어에게 보여줄 규칙</h2>
+  <p class="sec-note">시작 화면에서 한 번, 사건수첩 설정에서 언제든 다시 볼 수 있게 둔다. 아래 문장을 그대로 쓰면 된다.</p>
+
+  <div class="rule-sheet">
+    <h3>사건을 맡기며</h3>
+    <p>
+      당신은 이 밤의 판정자입니다. 다섯 사람이 한자리에 있었고, 그중 하나가 사람을 죽였습니다.
+      남은 넷도 저마다 감출 것이 있어, 누구도 전부를 말하지는 않습니다.
+    </p>
+
+    <h3>진행</h3>
+    <ol>
+      <li><strong>세 라운드에 걸쳐 조사합니다.</strong> 라운드가 바뀔 때마다 새로운 사실이 드러나고, 전 라운드에는 없던 장소와 물건을 살펴볼 수 있게 됩니다.</li>
+      <li><strong>한 라운드에 여덟 번 움직일 수 있습니다.</strong> 장소를 한 곳 조사하는 데 한 번, 사람에게 한 번 묻는 데 한 번이 듭니다. 여덟 번으로는 다섯 사람을 모두 만나면서 모든 방을 뒤질 수 없습니다. 무엇을 포기할지가 이 게임의 첫 번째 판단입니다.</li>
+      <li><strong>용의자의 자리에 처음 들어서면 그 사람이 먼저 알리바이를 말합니다.</strong> 그 밤 어디에 있었고 곁에 누가 있었는지를 짧게 밝힙니다. 이 진술에는 행동이 들지 않으며, 사건수첩에 그대로 남습니다.</li>
+      <li><strong>같은 자리를 뒤지면 그 사람이 감추려는 것의 자취가 나옵니다.</strong> 무엇이 나오는지는 라운드마다 다릅니다. 이번 라운드에 아무것도 나오지 않은 자리라도, 다음 라운드에는 달라질 수 있습니다.</li>
+      <li><strong>대화로는 알리바이를 다시 묻지 마십시오.</strong> 이미 들은 이야기입니다. 대화는 그 진술의 빈틈을 파고들거나, 손에 쥔 물건을 내밀어 해명을 요구하는 자리입니다.</li>
+      <li><strong>물증 없이 찌르면 흔들릴 뿐 인정하지 않습니다.</strong> 아픈 데를 건드리면 말이 흐트러지지만, 그것만으로 실토를 받아낼 수는 없습니다. 그 비밀을 여는 물건을 손에 넣어 내밀었을 때 비로소 입을 엽니다.</li>
+      <li><strong>사건수첩에서 단서 두 장을 겹쳐 보십시오.</strong> 따로 볼 때는 아무것도 아니던 둘이 겹치면 새 사실이 됩니다. 겹쳐 보는 데는 행동이 들지 않습니다.</li>
+      <li><strong>판이 한 번 뒤집힙니다.</strong> 조사 도중 누군가 감추던 것이 남의 입에서 먼저 새어 나옵니다. 그 뒤부터 두 사람을 마주 앉히는 <em>대질</em>을 쓸 수 있습니다. 한 판에 한 번뿐이며, 되돌릴 수 없습니다.</li>
+      <li><strong>마지막 라운드가 끝나면 이름을 대야 합니다.</strong> 범인과 흉기를 고르고 동기를 적습니다. 셋을 모두 맞히면 사건이 해결됩니다.</li>
+    </ol>
+
+    <h3>채점</h3>
+    <p>
+      범인을 맞히면 5점, 밝혀낸 비밀 하나마다 1점, 만점은 10점입니다.
+      점수에 따라 네 가지 결말 중 하나에 닿습니다 —
+      <em>미궁</em>, <em>절반의 진실</em>, <em>밝혀진 밤</em>, <em>완전한 해명</em>.
+    </p>
+    <p style="margin-bottom:0">
+      범인을 놓쳐도 이야기는 끝까지 갑니다. 다만 그 밤의 진상은,
+      당신이 어디까지 닿았는지에 따라 다르게 남습니다.
+    </p>
+  </div>
+
+  <div class="callout">
+    <span class="lbl">문안을 다듬을 때</span>
+    <p>
+      라운드 수와 행동 예산은 시나리오마다 다를 수 있으므로
+      <code>config.rounds</code>와 <code>config.turns_per_round</code>에서 읽어 채워 넣는다.
+      50편 가운데 34편이 3라운드, 16편이 4라운드다. 예산은 전 편 8로 같다.
+    </p>
+  </div>
+</section>
+
+
+<section id="s2">
+  <h2 class="sec"><span class="n">02</span>한 판의 구조</h2>
+  <p class="sec-note">타이틀에서 엔딩까지, 화면이 넘어가는 순서.</p>
+
+  <div class="stats">
+    <div class="stat"><div class="v">5</div><div class="k">용의자</div></div>
+    <div class="stat"><div class="v">3~4</div><div class="k">라운드</div></div>
+    <div class="stat"><div class="v">8</div><div class="k">라운드당 행동</div></div>
+    <div class="stat"><div class="v">7.1</div><div class="k">평균 장소</div></div>
+    <div class="stat"><div class="v">17</div><div class="k">평균 단서</div></div>
+    <div class="stat"><div class="v">20</div><div class="k">화면</div></div>
+  </div>
+
+  <pre>도입   타이틀 → (세계관 입력 → 각색) 또는 준비된 사건 → 사건 공개
+       → 오프닝 나레이션 → 혈흔 전환 → 현장 → 피해자 카드 → 용의자 소개
+
+조사   ┌ 라운드 시작 배너 ─ 나레이션 ─ 이번 라운드에 열린 것 안내
+       │   지도 → 장소 조사 → (그 방 주인에게) 심문
+       │   사건수첩 → 인물 · 단서 · 메모 · 겹쳐 보기
+       │   [2라운드부터] 대질
+       └ 라운드 종료 나레이션                       × 3~4
+
+결말   지목 직전 나레이션 → 범인 지목 → 진상 6박 → 범행 재연 6컷 → 엔딩</pre>
+
+  <p>
+    조사 구간의 세 갈래(지도·수첩·대질)는 하단 내비게이션에 늘 떠 있고, 서로 자유롭게 오갈 수 있다.
+    라운드를 넘기는 것은 예산을 다 썼을 때 자동으로, 또는 플레이어가 직접 넘길 때다.
+  </p>
+</section>
+
+
+<section id="s3">
+  <h2 class="sec"><span class="n">03</span>행동 예산</h2>
+  <p class="sec-note">이 게임의 긴장은 전부 여기서 나온다.</p>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th>행동</th><th class="num">비용</th><th>비고</th></tr></thead>
+    <tbody>
+      <tr><td>장소 선택지 하나 누르기</td><td class="num">1</td><td>아무것도 안 나와도 <strong>예산은 든다</strong></td></tr>
+      <tr><td>인물에게 한 번 묻기</td><td class="num">1</td><td>장소에서 들어가든 수첩에서 들어가든 같다</td></tr>
+      <tr><td>첫 대면 알리바이 듣기</td><td class="num">0</td><td>사람마다 한 번, 자동</td></tr>
+      <tr><td>단서 두 장 겹쳐 보기</td><td class="num">0</td><td>수첩 안의 일이다</td></tr>
+      <tr><td>이미 찾은 단서 자세히 보기</td><td class="num">0</td><td>파생 행동</td></tr>
+      <tr><td>대질</td><td class="num">별도</td><td>한 판 1회 토큰. 예산과 다투지 않는다</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="callout">
+    <span class="lbl">헛수고에도 값을 매기는 까닭</span>
+    <p>
+      아무것도 안 나오는 선택지를 공짜로 두면 전부 눌러 보는 것이 최적해가 되어 선택이 사라진다.
+      실제로 91편은 라운드마다 여덟 번 중 두세 번이 빈손이다. 그 빈손이 정보다 —
+      이 방은 이미 훑었다는 뜻이므로.
+    </p>
+  </div>
+
+  <h4>예산 8을 고른 근거</h4>
+  <p>
+    12로 시작했으나 사용률이 42%에 머물러 제약이 없었다. 4·8·10·12를 각각 스무 판씩 돌려
+    보니 12에서는 어느 방식으로 하든 정답률이 100%였고, 8에서 방식마다 갈라졌다.
+    10과 12가 오히려 8보다 나빠지는 구간이 있었는데, 탐색이 심문을 밀어내
+    비밀이 덜 열렸기 때문이다.
+  </p>
+
+  <h4>다섯 가지 플레이 방식으로 잰 결과</h4>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>방식</th><th class="num">탐색 비중</th><th class="num">범인 적중</th><th class="num">평균 점수</th><th>성향</th></tr></thead>
+    <tbody>
+      <tr><td>정공법</td><td class="num">50%</td><td class="num">3/4</td><td class="num">3.8</td><td>뒤지고 묻고 짚는다</td></tr>
+      <tr><td>탐색파</td><td class="num">75%</td><td class="num">4/4</td><td class="num">5.5</td><td>물증을 모아 마지막에 들이댄다</td></tr>
+      <tr><td>심문파</td><td class="num">15%</td><td class="num">3/4</td><td class="num">4.8</td><td>말과 말 사이를 노린다</td></tr>
+      <tr><td>증거파</td><td class="num">40%</td><td class="num">3/4</td><td class="num">4.2</td><td>쥔 것을 곧장 들이댄다</td></tr>
+      <tr><td>모순파</td><td class="num">30%</td><td class="num">3/4</td><td class="num">3.8</td><td>남의 진술을 물어다 붙인다</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>
+    탐색파가 가장 잘 푼다. 물증이 실토의 열쇠이기 때문이다. 다만 점수 5.5는 만점의 절반을
+    조금 넘는 수준이라, 방 뒤지기만으로 끝나지는 않는다.
+  </p>
+</section>
+
+
+<section id="s4">
+  <h2 class="sec"><span class="n">04</span>단서가 들어오는 네 갈래</h2>
+  <p class="sec-note">한 단서는 <strong>한 갈래로만</strong> 들어온다. 길이 둘이면 플레이어가 이미 가진 것을 또 찾느라 예산을 쓴다.</p>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th>갈래</th><th class="mono">channel</th><th class="num">비용</th><th>언제</th><th class="num">50편 합계</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="pill auto">자동 지급</span></td>
+        <td class="mono">crime_scene · spine</td><td class="num">0</td>
+        <td>현장 검안은 시작할 때, 증언은 해당 라운드가 열릴 때</td>
+        <td class="num">446</td>
+      </tr>
+      <tr>
+        <td><span class="pill search">장소 탐색</span></td>
+        <td class="mono">location · record · physical</td><td class="num">1</td>
+        <td>그 장소, 그 라운드의 선택지를 눌렀을 때</td>
+        <td class="num">438</td>
+      </tr>
+      <tr>
+        <td><span class="pill talk">심문 실토</span></td>
+        <td class="mono">belongings</td><td class="num">1</td>
+        <td>ADMIT을 끌어내면 소지품이 딸려 온다</td>
+        <td class="num">인물당 1</td>
+      </tr>
+      <tr>
+        <td><span class="pill note">수첩 조합</span></td>
+        <td class="mono">clue_combos</td><td class="num">0</td>
+        <td>두 장을 모두 손에 넣은 뒤 겹쳤을 때</td>
+        <td class="num">편당 4.1</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>91편 열여덟 개 전수</h3>
+  <p>선택지 번호까지 적었다. 프론트는 이 표대로 나오는지 확인하면 된다.</p>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th class="mono">ID</th><th class="num">공개R</th><th>갈래</th><th>어디서 · 몇 번째 선택지</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">K1</td><td class="num">1</td><td><span class="pill auto">자동</span></td><td>검안 — 시작할 때 손에 있다</td></tr>
+      <tr><td class="mono">K2</td><td class="num">1</td><td><span class="pill auto">자동</span></td><td>현장 — 시작할 때</td></tr>
+      <tr><td class="mono">K3</td><td class="num">1</td><td><span class="pill auto">자동</span></td><td>현장 — 시작할 때</td></tr>
+      <tr><td class="mono">K4</td><td class="num">1</td><td><span class="pill auto">자동</span></td><td>현장 — 시작할 때</td></tr>
+      <tr><td class="mono">K5</td><td class="num">1</td><td><span class="pill auto">자동</span></td><td>증언 — 1라운드가 열릴 때</td></tr>
+      <tr><td class="mono">K0</td><td class="num">1</td><td><span class="pill search">탐색</span></td><td>세미나실 · 1R · 1번 「운영진 자기소개 페이지를 조사한다」</td></tr>
+      <tr><td class="mono">K10</td><td class="num">1</td><td><span class="pill search">탐색</span></td><td>세미나실 · 1R · 2번 「노트북의 영상 파일을 들여다본다」</td></tr>
+      <tr><td class="mono">K11</td><td class="num">1</td><td><span class="pill search">탐색</span></td><td>복도·자판기 앞 · 1R · 1번 「자판기 CCTV를 조사한다」</td></tr>
+      <tr><td class="mono">S2</td><td class="num">1</td><td><span class="pill search">탐색</span></td><td>옆 빈 세미나실 · 1R · 1번 「화이트보드 구석을 조사한다」</td></tr>
+      <tr><td class="mono">K6</td><td class="num">2</td><td><span class="pill auto">자동</span></td><td>증언 — 2라운드가 열릴 때</td></tr>
+      <tr><td class="mono">K8</td><td class="num">2</td><td><span class="pill search">탐색</span></td><td>정문 앞 메가커피 · 2R · 1번 「픽업대 CCTV를 들여다본다」</td></tr>
+      <tr><td class="mono">S1</td><td class="num">2</td><td><span class="pill search">탐색</span></td><td>재현의 지정석 · 2R · 1번 「총회 준비 메모를 들여다본다」</td></tr>
+      <tr><td class="mono">S3</td><td class="num">2</td><td><span class="pill search">탐색</span></td><td>세미나실 · 2R · 2번 「드라이브 열람 로그를 훑어본다」</td></tr>
+      <tr><td class="mono">K7</td><td class="num">3</td><td><span class="pill auto">자동</span></td><td>증언 — 3라운드가 열릴 때</td></tr>
+      <tr><td class="mono">K9</td><td class="num">3</td><td><span class="pill auto">자동</span></td><td>증언 — 3라운드가 열릴 때</td></tr>
+      <tr><td class="mono">KD</td><td class="num">3</td><td><span class="pill search">탐색</span></td><td>학회 사물함 · 3R · 1번 「촬영 소품 파우치를 훑어본다」 — <strong>결정타</strong></td></tr>
+      <tr><td class="mono">S4</td><td class="num">3</td><td><span class="pill search">탐색</span></td><td>정문 앞 메가커피 · 3R · 1번 「시럽 펌프대 CCTV를 훑어본다」</td></tr>
+      <tr><td class="mono">S5</td><td class="num">3</td><td><span class="pill search">탐색</span></td><td>복도·자판기 앞 · 3R · 1번 「접힌 종이를 훑어본다」</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="callout">
+    <span class="lbl">선택지 이름은 그 단서의 물건 이름이어야 한다</span>
+    <p>
+      「명패를 들여다본다」를 눌렀는데 노트북 영상 파일이 나오면 플레이어는 게임을 믿지 못한다.
+      선택지 이름은 단서 문장의 머리에서 뽑아 쓰므로,
+      <code>surface</code>를 고치면 선택지 이름도 따라 바뀐다.
+    </p>
+  </div>
+</section>
+
+
+<section id="s5">
+  <h2 class="sec"><span class="n">05</span>첫 대면 알리바이</h2>
+  <p class="sec-note">동선을 채팅으로 되묻게 하던 것을 없앴다.</p>
+
+  <p>
+    인물을 <strong>처음 만나는 순간</strong>, 장소에서 들어갔든 수첩에서 들어갔든,
+    그 사람이 먼저 두 문장으로 알리바이를 밝힌다. 예산은 들지 않고, 사건수첩 인물 탭에 그대로 박힌다.
+  </p>
+
+  <pre>C1 서민재   저는 초저녁엔 「정문 앞 메가커피」, 밤엔 「복도·자판기 앞」에 있었어요.
+            노하람이 곁에 있었어요.
+C4 유가람   저는 초저녁부터 밤까지 「옆 빈 세미나실」에 있었어요.
+            하필 곁엔 아무도 없었어요.
+C5 차연우   나는 초저녁엔 「옆 빈 세미나실」, 밤엔 「복도·자판기 앞」에 있었어요.
+            하필 곁엔 아무도 없었어요.       <span class="c">← 범인. 거짓 동선을 댄다</span></pre>
+
+  <p>
+    첫 문장은 사망 시각을 반드시 포함한 동선, 둘째 문장은 본 사람이 있는가다.
+    범인은 거짓 동선을 대므로, 이 진술과 나중에 나오는 물증이 어긋나는 지점이 곧 실마리가 된다.
+    문장은 인물의 말체로 짓는다 — 250명 전원이 제 말투와 일치한다.
+  </p>
+
+  <p>
+    이 변경으로 채팅의 역할이 분명해졌다. 알리바이를 <strong>알고 나서</strong> 그 안을 파고드는 자리다.
+    "그 자리에 얼마나 있었소", "그 자리를 언제 떴소" 같은 질문이 성립하고,
+    다섯 번 반복되던 "어디 있었소"가 사라지면서 예산이 실제 추궁에 돌아갔다.
+  </p>
+</section>
+
+
+<section id="s6">
+  <h2 class="sec"><span class="n">06</span>중반 이벤트</h2>
+  <p class="sec-note">전 50편이 같은 자리에 하나씩 갖는다.</p>
+
+  <p>
+    2라운드(4라운드 편은 2 또는 3라운드) 시작 직후, 라운드 나레이션이 끝난 다음에 터진다.
+    순서는 다음과 같다.
+  </p>
+
+  <ol>
+    <li>토스트가 뜬다 — 「판이 뒤집힙니다」</li>
+    <li>화면이 한 번 흔들린다</li>
+    <li>이벤트 나레이션이 나온다. <strong>건너뛸 수 없다</strong></li>
+    <li>효과가 적용된다 — 한 인물의 비밀이 즉시 공개되고 그 인물의 압박이 한 단계 오른다</li>
+    <li><strong>대질이 해금된다.</strong> 하단 내비의 [대질] 자물쇠가 풀린다</li>
+  </ol>
+
+  <p>
+    그 전에 [대질]을 누르면 잠금 문구가 뜨고 <strong>토큰과 예산 어느 쪽도 깎이지 않는다</strong>.
+    이벤트는 라운드 시작 처리의 일부이므로 예산을 쓰지 않는다.
+  </p>
+</section>
+
+
+<section id="s7">
+  <h2 class="sec"><span class="n">07</span>대질</h2>
+  <p class="sec-note">한 판에 한 번. 되돌릴 수 없다.</p>
+
+  <p>
+    두 사람을 마주 앉히면 미리 짜인 다섯 마디가 오간다. 진술 → 반박 → 동요 → 쐐기 → 함구.
+    편당 평균 3.7쌍이 준비되어 있고, 플레이어는 그중 한 쌍만 쓸 수 있다.
+  </p>
+
+  <pre>[진술] 차연우: 휴식 시간에 어댑터를 가지러 돌아갔다가 쓰러진 회장을 발견했다
+[반박] 서민재: 그 시각 저는 복도·자판기 앞에 있었습니다. 그런데 차연우는
+               그 자리에 없었습니다. 제가 보지 못했어요.
+[동요] 차연우: …서민재이 잘못 본 겁니다. 사람이 많았고, 어두웠고—
+[쐐기] 서민재: 어두웠으면 저도 못 봤겠지요. 그런데 저는 그 자리를 지켰어요.
+               차연우는 오지 않았습니다.
+[함구] 차연우: …제가 무슨 말을 해도 곧이듣지 않으실 텐데요.
+
+▸ 두 사람의 말이 같은 시각에 어긋난다. 둘 중 하나는 사실이 아니다 —
+  어느 쪽인지는 아직 모른다.</pre>
+
+  <div class="callout">
+    <span class="lbl">자백으로 끝내지 않는 까닭</span>
+    <p>
+      전에는 마지막 마디가 「…거기 없었어요. 인정할게요」였고, 요약문은
+      「알리바이가 거짓임이 확정된다. 결정타 단서로 가는 길이 열린다」였다.
+      대질 한 번으로 답이 건너오는 셈이라, 쓰는 순간 게임이 끝났다.
+      지금은 <strong>어긋남만 기록에 올린다</strong>. 어느 쪽이 거짓인지는 플레이어가 정한다.
+    </p>
+  </div>
+
+  <p>
+    쌍은 네 종류다 — 알리바이가 부딪히는 <code>alibi</code>, 같은 시각 같은 자리를 댄
+    <code>timeline</code>, 한쪽이 다른 쪽을 봤다는 <code>witness</code>,
+    감춰진 사이가 드러나는 <code>relation</code>.
+    <code>relation</code> 쌍을 쓰면 그 관계가 사건수첩에서 공개로 바뀐다.
+  </p>
+</section>
+
+
+<section id="s8">
+  <h2 class="sec"><span class="n">08</span>지목과 채점</h2>
+
+  <p>
+    마지막 라운드가 끝나면 지목 화면으로 넘어간다. 범인은 다섯 중 고르고, 흉기도 다섯 중 고르며,
+    동기는 자유롭게 적는다. 확인 창을 한 번 거치고, 제출하면 되돌릴 수 없다.
+  </p>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th>항목</th><th class="mono">키</th><th class="num">점수</th></tr></thead>
+    <tbody>
+      <tr><td>범인 적중</td><td class="mono">culprit_correct</td><td class="num">+5</td></tr>
+      <tr><td>밝혀낸 비밀 하나마다</td><td class="mono">secret_revealed_each</td><td class="num">+1</td></tr>
+      <tr><td>오답 지목</td><td class="mono">wrong_accusation_penalty</td><td class="num">−2</td></tr>
+      <tr><td>만점</td><td class="mono">max</td><td class="num">10</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th class="num">점수</th><th>등급</th><th>결말</th></tr></thead>
+    <tbody>
+      <tr><td class="num">0–2</td><td>미궁</td><td>아무도 진상에 닿지 못한다</td></tr>
+      <tr><td class="num">3–5</td><td>절반의 진실</td><td>몇 가지는 밝혀졌으나 핵심이 남는다</td></tr>
+      <tr><td class="num">6–9</td><td>밝혀진 밤</td><td>범인을 짚었다. 다만 다 알지는 못했다</td></tr>
+      <tr><td class="num">10</td><td>완전한 해명</td><td>남김없이</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>
+    지목 뒤에는 점수와 무관하게 <strong>진상 6박</strong>과 <strong>범행 재연 6컷</strong>이 재생된다.
+    그날 밤 → 범인 → 동기 → 트릭 → 빠져나간 길 → 그리고 남은 하나 순서다.
+    엔딩 글만 등급에 따라 갈린다.
+  </p>
+
+  <h4>난이도 표기</h4>
+  <p>
+    별 다섯 개로 매긴다. 실력 네 단계 × 시드 다섯 개, 편당 스무 판을 예산 8로 돌려
+    해결률·확신율·점수를 재고 그 분포의 오분위로 별을 나눈다.
+    현재 50편이 <strong>각 등급에 정확히 열 편씩</strong> 들어간다.
+  </p>
+</section>
+
+
+<section id="s9">
+  <h2 class="sec"><span class="n">09</span>화면 스무 개</h2>
+  <p class="sec-note">앞면(프론트)과 뒷면(데이터·API)을 같이 적는다. 스키마 경로는 시나리오 JSON 기준이다.</p>
+
+  <h3>도입 · 여덟 화면</h3>
+
+  <div class="screen">
+    <header><span class="id">01</span><span class="nm">타이틀</span><span class="pill cost">예산 0</span></header>
+    <dl>
+      <dt>앞면</dt><dd>로고 · 부제 · 표어 · 버튼 둘(새 사건 / 준비된 사건) · 어두운 서재 정지화면</dd>
+      <dt>뒷면</dt><dd>없음</dd>
+    </dl>
+  </div>
+
+  <div class="screen">
+    <header><span class="id">02</span><span class="nm">세계관 입력</span><span class="pill cost">예산 0</span></header>
+    <dl>
+      <dt>앞면</dt><dd>입력창 · 예시 문구 · 생성 버튼 · 준비된 사건으로 가기</dd>
+      <dt>뒷면</dt><dd><code>POST /generate</code> — 자유 텍스트를 받아 시나리오 JSON을 만든다</dd>
+    </dl>
+  </div>
+
+  <div class="screen">
+    <header><span class="id">03</span><span class="nm">준비된 사건</span><span class="pill cost">예산 0</span></header>
+    <dl>
+      <dt>앞면</dt><dd>표지 카드 격자(640×400) · 난이도 별 뱃지 · 정렬 · 시작</dd>
+      <dt>뒷면</dt><dd><code>meta.title</code> · <code>stars.stars</code> · <code>stars.label</code> · <code>hud.copy.summary_text</code></dd>
+    </dl>
+  </div>
+
+  <div class="screen">
+    <header><span class="id">04</span><span class="nm">각색 중</span><span class="pill cost">예산 0</span></header>
+    <dl>
+      <dt>앞면</dt><dd>진행 막대 · 차례로 바뀌는 상태 줄 · 원작 제목</dd>
+      <dt>뒷면</dt><dd>생성 파이프라인 진행률</dd>
+    </dl>
+  </div>
+
+  <div class="screen">
+    <header><span class="id">05</span><span class="nm">사건 공개</span><span class="pill cost">건너뛰기 불가</span></header>
+    <dl>
+      <dt>앞면</dt><dd>검은 화면에 제목이 도장 찍히듯 떠오른다 · 배경 한 줄 · 마지막 두 줄은 한 박자 늦게 · 주 버튼 「사건을 연다」</dd>
+      <dt>뒷면</dt><dd><code>ui.story_narration.case_open.text</code></dd>
+    </dl>
+  </div>
+
+  <div class="screen">
+    <header><span class="id">06</span><span class="nm">오프닝 나레이션</span><span class="pill cost">건너뛰기 가능</span></header>
+    <dl>
+      <dt>앞면</dt><dd>삽화가 컷마다 바뀐다 · 글상자 · 다음/건너뛰기</dd>
+      <dt>뒷면</dt><dd><code>ui.narration.beats[]</code> — 비트당 <code>pages[]</code>. <strong>한 쪽에 두 문장, 공백 포함 88자</strong>가 상한이고 한 문장은 44자를 넘지 않는다. 쪽마다 삽화 하나</dd>
+    </dl>
+  </div>
+
+  <div class="screen">
+    <header><span class="id">07</span><span class="nm">혈흔 전환</span><span class="pill cost">건너뛰기 불가</span></header>
+    <dl>
+      <dt>앞면</dt><dd>붉게 번지는 전환 · 한 문장</dd>
+      <dt>뒷면</dt><dd><code>ui.screens[blood_transition]</code></dd>
+    </dl>
+  </div>
+
+  <div class="screen">
+    <header><span class="id">08</span><span class="nm">현장 · 피해자 카드 · 용의자 소개</span><span class="pill cost">건너뛰기 가능</span></header>
+    <dl>
+      <dt>앞면</dt><dd>현장 전경과 증거 목록 → 피해자 초상과 네 칸(신분·발견 장소·발견 시각·사인) → 초상 카드 다섯 장이 차례로 나오며 각자 한 단락 소개</dd>
+      <dt>뒷면</dt><dd><code>story_narration.crime_scene</code> · <code>.victim_card</code> · <code>.suspect_intro[cast_id]</code>. 소개문에는 비밀과 동기가 한 글자도 들어 있지 않다</dd>
+    </dl>
+  </div>
+
+  <h3>조사 · 여섯 화면</h3>
+
+  <div class="screen">
+    <header><span class="id">09</span><span class="nm">라운드 화면</span><span class="pill cost">상시</span></header>
+    <dl>
+      <dt>앞면</dt><dd>사건 제목 · <code>ROUND {r} / 3</code> · 남은 생명 · 설정 · 사건 개요 패널 · 하단 내비 넷</dd>
+      <dt>뒷면</dt><dd><code>ui.hud.copy</code>. 내비는 지도 · 사건수첩 · 대질 · 범인 지목</dd>
+    </dl>
+    <div class="wf">
+      <div class="row">
+        <div class="box"><b>여섯 잔의 회의</b></div>
+        <div class="box">ROUND 2 / 3</div>
+        <div class="box">남은 행동 5</div>
+      </div>
+      <div class="box">사건 개요 — 홍보 영상 시사가 끝나고 10분 휴식…</div>
+      <div class="row">
+        <div class="box">지도</div><div class="box">사건수첩</div>
+        <div class="box">대질</div><div class="box">범인 지목</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen">
+    <header><span class="id">10</span><span class="nm">지도</span><span class="pill cost">예산 0</span></header>
+    <dl>
+      <dt>앞면</dt><dd>장소 아이콘 · 이번 라운드에 새로 열린 곳 표시 · 돌아가기</dd>
+      <dt>뒷면</dt><dd><code>map.places[]</code>의 <code>pos</code>로 배치. 이동 한도 밖의 장소는 흐리게</dd>
+    </dl>
+  </div>
+
+  <div class="screen">
+    <header><span class="id">11</span><span class="nm">장소 조사</span><span class="pill cost">선택지당 1</span></header>
+    <dl>
+      <dt>앞면</dt><dd>장소 일러스트 · 주인의 서 있는 그림(있으면) · <strong>선택지 넷</strong> · 결과 글상자 · 발견 수 카운터 · 「이 사람에게 묻는다」</dd>
+      <dt>뒷면</dt><dd><code>ui.place_screens[].rounds["2"].actions[]</code>. 각 항목의 <code>finds</code>가 단서 ID이거나 <code>null</code>. <strong><code>null</code>도 예산 1을 쓴다</strong></dd>
+      <dt>결과</dt><dd><code>result_lines[]</code>를 순서대로 띄우고, <code>highlight_last</code>가 참이면 마지막 줄을 강조한 뒤 단서 카드를 연다</dd>
+    </dl>
+    <div class="wf">
+      <div class="box"><b>세미나실(중도 6층)</b> — 2라운드 · 발견한 단서 1 / ?</div>
+      <div class="row">
+        <div class="box">1 · 회의 녹음 파일을 들여다본다</div>
+        <div class="box">2 · 드라이브 열람 로그를 훑어본다</div>
+      </div>
+      <div class="row">
+        <div class="box">3 · 바닥을 살펴본다 <span style="color:var(--muted)">(빈손)</span></div>
+        <div class="box">4 · 창가를 뒤져 본다 <span style="color:var(--muted)">(빈손)</span></div>
+      </div>
+      <div class="box">→ 회의 녹음 파일: 암전 15분 내내 규칙적인 코골이가…</div>
+    </div>
+  </div>
+
+  <div class="screen">
+    <header><span class="id">12</span><span class="nm">심문</span><span class="pill cost">질문당 1</span></header>
+    <dl>
+      <dt>들어가는 길</dt><dd>수첩 인물 탭에서(누구나) 또는 장소에서 그 방 주인에게(지름길). 제 방이 없는 인물은 수첩으로만</dd>
+      <dt>앞면</dt><dd>초상 표정 세 단계(평정/흔들림/무너짐) · 대사 글상자 · 감정 표시 · 질문 입력 · 「증거를 들이댄다」</dd>
+      <dt>첫 대면</dt><dd>알리바이 두 문장이 말풍선으로 먼저 뜬다. <strong>예산 0</strong></dd>
+      <dt>뒷면</dt><dd><code>POST /interrogate</code> → 태도(<code>stance</code>)와 지시문(<code>directive</code>)을 받아 LLM 프롬프트에 <strong>반드시 이어 붙인다</strong></dd>
+      <dt>대화 이력</dt><dd>그 인물과의 최근 여섯 마디를 함께 보낸다. <code>memory_briefing</code>과 <code>again_directive</code>가 오면 그것도 붙인다</dd>
+    </dl>
+    <div class="wf">
+      <div class="row">
+        <div class="box" style="flex:0 0 34%"><b>서민재</b><br>표정 · 흔들림<br>압박 ▓▓▓░░</div>
+        <div class="box">
+          <b>첫 대면</b> — 저는 초저녁엔 「정문 앞 메가커피」, 밤엔 「복도·자판기 앞」에 있었어요…<br><br>
+          Q. 「접힌 종이」 — 이것을 어떻게 설명하겠소.<br>
+          A. …
+        </div>
+      </div>
+      <div class="row">
+        <div class="box">질문 입력</div>
+        <div class="box" style="flex:0 0 30%">증거를 들이댄다</div>
+        <div class="box" style="flex:0 0 24%">남은 행동 5</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="screen">
+    <header><span class="id">13</span><span class="nm">대질</span><span class="pill cost">한 판 1회 · 행동 1</span></header>
+    <dl>
+      <dt>잠김</dt><dd>중반 이벤트 전에는 자물쇠. 눌러도 <strong>아무것도 소모되지 않는다</strong></dd>
+      <dt>앞면</dt><dd>좌우 초상 둘이 마주 본다 · 각자의 진술 카드 · 가운데 어긋난 대목 표시 · 확인 창(되돌릴 수 없음) · 다섯 마디 대본 재생</dd>
+      <dt>뒷면</dt><dd><code>POST /confront</code> → <code>cross_exam.exchange[]</code>와 <code>reveals</code></dd>
+    </dl>
+  </div>
+
+  <div class="screen">
+    <header><span class="id">14</span><span class="nm">사건수첩</span><span class="pill cost">예산 0</span></header>
+    <dl>
+      <dt>앞면</dt><dd>탭 셋(인물·단서·메모) · 왼쪽 목록 · 가운데 상세 · 오른쪽 메모</dd>
+      <dt>인물 탭</dt><dd>초상 · 신분·나이·관계 · <strong>알리바이</strong> · 들은 말 · 「이 사람에게 묻는다」</dd>
+      <dt>단서 탭</dt><dd>단서 카드 · 「겹쳐 본다」 → 상대 단서 고르기 → 성공하면 새 항목이 추가되고 점수</dd>
+      <dt>뒷면</dt><dd><code>ui.notebook</code> · <code>ui.suspect_cards[]</code> · <code>ui.clue_cards[]</code> · <code>POST /combine</code></dd>
+    </dl>
+  </div>
+
+  <div class="screen">
+    <header><span class="id">15</span><span class="nm">라운드 전환</span><span class="pill cost">예산 0</span></header>
+    <dl>
+      <dt>앞면</dt><dd>종료 나레이션 → 토스트 「n라운드가 시작됩니다」 → 시작 나레이션 → (해당 라운드면) 이벤트</dd>
+      <dt>뒷면</dt><dd><code>story_narration.round_end[r]</code> · <code>.round_start[r]</code> · <code>.event[r]</code>. <code>POST /next_round</code>가 자동 지급 단서를 <code>given</code>으로 돌려준다</dd>
+    </dl>
+  </div>
+
+  <h3>결말 · 네 화면</h3>
+
+  <div class="screen">
+    <header><span class="id">16</span><span class="nm">범인 지목</span><span class="pill cost">되돌릴 수 없음</span></header>
+    <dl>
+      <dt>앞면</dt><dd>지목 직전 나레이션 → 용의자 다섯 장 · 흉기 다섯 개 · 동기 자유 입력 · 확인 창</dd>
+      <dt>뒷면</dt><dd><code>choices.culprit[]</code> · <code>choices.weapon[]</code> · <code>answer_format.motive = "free_text"</code></dd>
+    </dl>
+  </div>
+
+  <div class="screen">
+    <header><span class="id">17</span><span class="nm">진상</span><span class="pill cost">건너뛰기 불가</span></header>
+    <dl>
+      <dt>앞면</dt><dd>여섯 박 — 그날 밤 · 범인 · 동기 · 트릭 · 빠져나간 길 · 그리고 남은 하나</dd>
+      <dt>뒷면</dt><dd><code>ui.reveal_sequence.beats[]</code>. 각 박에 <code>label</code>과 <code>text</code></dd>
+    </dl>
+  </div>
+
+  <div class="screen">
+    <header><span class="id">18</span><span class="nm">범행 재연</span><span class="pill cost">자동 진행</span></header>
+    <dl>
+      <dt>앞면</dt><dd>여섯 컷 — 결심 · 접근 · 범행 · 트릭 · 위장 · 그리고 아침. 컷마다 한 줄 자막, 범인 얼굴 첫 공개</dd>
+      <dt>뒷면</dt><dd><code>ui.murder_reenactment.cuts[]</code>. 컷마다 <code>camera</code> · <code>emotion</code> · <code>lighting</code> · <code>continuity</code> · <code>image.prompt</code> · <code>image.negative_en</code></dd>
+    </dl>
+  </div>
+
+  <div class="screen">
+    <header><span class="id">19</span><span class="nm">엔딩</span><span class="pill cost">—</span></header>
+    <dl>
+      <dt>앞면</dt><dd>등급 이름 · 엔딩 글 · 점수 내역 · 버튼 셋(다시 · 다른 사건 · 기록 보기)</dd>
+      <dt>뒷면</dt><dd><code>ending.grades[]</code>에서 점수에 맞는 등급을 고르고 <code>story_narration.ending[등급명]</code>을 읽는다</dd>
+    </dl>
+  </div>
+
+  <div class="screen">
+    <header><span class="id">20</span><span class="nm">토스트</span><span class="pill cost">겹쳐 뜸</span></header>
+    <dl>
+      <dt>종류</dt><dd><code>clue_new</code> · <code>clue_decisive</code> · <code>round_start</code> · <code>event</code> · <code>secret_open</code> · <code>life_lost</code> · <code>exculpated</code></dd>
+      <dt>뒷면</dt><dd><code>ui.toasts[]</code>. <code>{r}</code> 자리에 라운드 번호를 채워 넣는다</dd>
+    </dl>
+  </div>
+</section>
+
+
+<section id="s10">
+  <h2 class="sec"><span class="n">10</span>백엔드 계약</h2>
+  <p class="sec-note">엔진(<code>game_engine_v2.GameSession</code>)이 노출하는 것 전부.</p>
+
+  <div class="scroll">
+  <table>
+    <thead><tr><th class="mono">메서드</th><th class="num">예산</th><th>돌려주는 것</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">search(place_id, action_index)</td><td class="num">1</td><td><code>found_clue</code> · <code>clue</code> · <code>place_name</code> · <code>label</code> · <code>turns_left</code></td></tr>
+      <tr><td class="mono">interrogate(suspect_id, question, …)</td><td class="num">1</td><td><code>stance</code> · <strong><code>directive</code></strong> · <code>gauge_after</code> · <code>hud</code> · <code>yielded_belonging</code> · <code>memory_briefing</code> · <code>again_directive</code> · <code>asked_before</code></td></tr>
+      <tr><td class="mono">remember(suspect_id, q, a)</td><td class="num">0</td><td>없음 — LLM이 뱉은 답을 기억에 적는다</td></tr>
+      <tr><td class="mono">confront(a, b, question)</td><td class="num">토큰</td><td><code>cross_exam.exchange[]</code> · <code>reveals</code> · <code>is_curated_pair</code></td></tr>
+      <tr><td class="mono">combine(clue1, clue2)</td><td class="num">0</td><td><code>success</code> · <code>name</code> · <code>points</code> · <code>already_done</code></td></tr>
+      <tr><td class="mono">inspect(target_id)</td><td class="num">0</td><td>이미 찾은 것의 상세</td></tr>
+      <tr><td class="mono">next_round()</td><td class="num">—</td><td><code>given</code>(자동 지급) · <code>findable</code>(찾을 수 있게 된 것) · <code>turns_left</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>심문 한 번의 전체 왕복</h3>
+  <pre><span class="c">// ① 엔진에 묻는다 — 판단은 코드가 내린다</span>
+st = engine.interrogate("C1", question,
+                        evidence_shown = <span class="c">/* 단서를 실제로 인용했을 때만 true */</span>)
+
+<span class="c">// ② 프롬프트를 조립한다 — 네 조각을 순서대로</span>
+system  = suspect_card(scenario, cast)      <span class="c">// 인물 설정서</span>
+system += st.directive                      <span class="c">// ★이번 턴의 태도. 빠뜨리면 안 된다</span>
+system += st.memory_briefing                <span class="c">// 이 인물이 지금까지 한 말</span>
+system += st.again_directive                <span class="c">// 같은 것을 또 물었을 때만</span>
+
+<span class="c">// ③ 최근 대화 여섯 마디와 함께 보낸다</span>
+answer = llm(system, history[-6:], question)
+
+<span class="c">// ④ 답을 기억에 적는다 — 이걸 빠뜨리면 다음 턴에 같은 말을 되풀이한다</span>
+engine.remember("C1", question, answer)</pre>
+
+  <div class="callout">
+    <span class="lbl">가장 자주 나던 사고</span>
+    <p>
+      ②의 <code>st.directive</code>를 붙이지 않으면 엔진이 ADMIT을 결정해도 모델은 그 사실을 모른 채
+      계속 회피한다. 화면에는 「실토」라고 뜨는데 대사는 「말씀드리기 어려워요」가 되는 상태다.
+      태도 기계와 대사가 끊어지는 이 한 줄이 채팅 품질 문제의 대부분을 만들었다.
+    </p>
+  </div>
+
+  <h3>증거 판정</h3>
+  <p>
+    <code>evidence_shown = true</code>만으로는 비밀이 열리지 않는다.
+    비밀이 지목한 단서(<code>secrets[].forced_by</code>)를 <strong>실제로 손에 쥐고 있어야</strong> ADMIT이 뜬다.
+    50편의 비밀 251개가 전부 <code>forced_by</code>를 갖고 있으므로 사실상 봉인이다.
+    쥐지 않은 채 찌르면 FLINCH — 흔들리되 인정하지 않는다.
+  </p>
+</section>
+
+
+<section id="s11">
+  <h2 class="sec"><span class="n">11</span>프론트가 지켜야 할 것</h2>
+
+  <div class="rule-sheet">
+    <ol>
+      <li><strong>빈손 선택지도 예산을 쓴다.</strong> 공짜로 두면 전부 눌러 보는 것이 최적해가 되어 선택이 사라진다.</li>
+      <li><strong>단서는 제 갈래로만 들어온다.</strong> 자동 지급 단서를 장소에도 놓지 말 것. 이미 가진 것을 찾느라 예산을 쓰게 된다.</li>
+      <li><strong>선택지 이름과 나오는 단서가 맞아야 한다.</strong> 「명패를 들여다본다」로 노트북 파일이 나오면 안 된다.</li>
+      <li><strong>알리바이를 채팅으로 되묻게 하지 말 것.</strong> 첫 대면에 이미 들었고 수첩에 박혀 있다.</li>
+      <li><strong>이벤트 나레이션은 건너뛸 수 없다.</strong> 대질 해금이 여기에 걸려 있다.</li>
+      <li><strong>잠긴 대질을 눌러도 아무것도 깎지 않는다.</strong> 잠금 문구만 띄운다.</li>
+      <li><strong>심문에는 대화 이력과 태도 지시문을 반드시 함께 보낸다.</strong> 둘 중 하나만 빠져도 인물이 같은 말을 되풀이하거나 태도와 어긋난 대사를 한다.</li>
+      <li><strong>나레이션 한 쪽은 두 문장, 공백 포함 88자.</strong> 한 문장은 44자를 넘기지 않는다. 넘으면 글상자에서 잘린다.</li>
+      <li><strong>나레이터는 플레이어에게 지시하지 않는다.</strong> 「적어 두어라」 같은 문장은 이야기가 아니라 사용설명서다.</li>
+    </ol>
+  </div>
+</section>
+
+
+<section id="s12">
+  <h2 class="sec"><span class="n">12</span>8월 25일 수정 내역</h2>
+  <p class="sec-note">플레이 기록을 검토하다 드러난 것들. 전부 50편에 반영했고 검증 8종을 다시 통과했다.</p>
+
+  <div class="card">
+    <div class="fix">
+      <div class="h">태도 지시문이 프롬프트에 실리지 않았다</div>
+      <div class="b">
+        엔진은 라운드마다 「들켰다, 이 사실을 지금 인정한다」는 지시문을 만들고 있었으나
+        미리보기 세 줄만 내보냈고, 프롬프트를 만드는 쪽은 그것을 쓰지 않았다.
+        <span class="was">결과 — 화면에 ADMIT이 떠도 대사는 계속 회피.</span>
+        이제 <code>directive</code> 전문을 내보내고 프롬프트에 이어 붙인다.
+      </div>
+    </div>
+    <div class="fix">
+      <div class="h">질문이 정답지에서 나왔다</div>
+      <div class="b">
+        자동 플레이 하네스가 <code>pressure_points[].trigger</code>를 그대로 질문으로 썼다.
+        <span class="was">결과 — 1라운드 첫 마디가 「DSL 2.0에 대해 말해 보시오」. 플레이어가 알 길이 없는 낱말이다.</span>
+        이제 손에 쥔 단서와 이미 공개된 비밀에 적힌 낱말로만 질문을 만든다.
+      </div>
+    </div>
+    <div class="fix">
+      <div class="h">증거 없이 비밀이 열렸다</div>
+      <div class="b">
+        <code>evidence_shown=true</code> 하나로 실토가 터졌다.
+        <span class="was">결과 — 1라운드에 비밀 넷이 한꺼번에 열리고 만점.</span>
+        비밀이 지목한 단서를 쥐고 있을 때만 열리도록 엔진 쪽에서 막았다.
+      </div>
+    </div>
+    <div class="fix">
+      <div class="h">범인이 한 번도 심문되지 않았다</div>
+      <div class="b">
+        심문 순번이 라운드마다 0번부터 다시 세어 앞의 네 명만 돌았다.
+        <span class="was">결과 — 다섯째 인물(범인)을 세 라운드 내내 만나지 못하고 10/10.</span>
+        순번을 라운드 너머로 잇고, 지목도 실제로 하게 했다.
+      </div>
+    </div>
+    <div class="fix">
+      <div class="h">첫 질문인데 「아까 말씀드렸잖아요」</div>
+      <div class="b">
+        장기기억이 디스크에 남아 다음 판으로 넘어갔다.
+        <span class="was">결과 — 새 판 1라운드 첫 질문부터 다섯 명 전원이 지난 판을 기억.</span>
+        새 판은 백지에서 시작한다.
+      </div>
+    </div>
+    <div class="fix">
+      <div class="h">지시문의 본보기 대사를 모델이 베꼈다</div>
+      <div class="b">
+        FLINCH 지시문에 예시로 적어 둔 「…그 장부 말이오」가
+        <span class="was">장부가 나오지도 않는 사건의 대사에 그대로 튀어나왔다.</span>
+        지시문에서 인용 대사를 전부 걷어냈다.
+      </div>
+    </div>
+    <div class="fix">
+      <div class="h">선택지 이름과 단서가 어긋났다</div>
+      <div class="b">
+        선택지는 장소 묘사에서 나오고 단서는 자리 번호로 붙었다.
+        <span class="was">결과 — 「명패를 들여다본다」로 노트북 영상 파일이 나왔다.</span>
+        이제 단서 문장에서 물건 이름을 뽑아 선택지에 쓴다.
+      </div>
+    </div>
+    <div class="fix">
+      <div class="h">자동 지급 단서가 장소에도 놓여 있었다</div>
+      <div class="b">
+        증언(<code>spine</code>)은 라운드가 열리면 저절로 들어오는데 장소 탐색 대상에도 들어 있었다.
+        <span class="was">결과 — 이미 가진 단서를 찾겠다고 예산을 썼다.</span>
+        갈래마다 길을 하나씩만 두었다.
+      </div>
+    </div>
+    <div class="fix">
+      <div class="h">용의자 소개에서 같은 말을 두 번 했다</div>
+      <div class="b">
+        <span class="was">「서민재. 부회장 — 응용통계학과… 서민재은 응용통계학과의 ESTJ로」</span>
+        250명 중 199명이 학과·별명·직책을 되풀이하고 있었다. 겹치는 대목을 잘라 냈다.
+      </div>
+    </div>
+    <div class="fix">
+      <div class="h">알리바이 문장이 말투 변환에 망가졌다</div>
+      <div class="b">
+        <span class="was">「찍혔을걸습니다?」 「암전 때니다?」 「잤어니다」</span> — 250개 중 101개가 제 말체와 어긋났다.
+        동선에서 다시 짓게 했다. 지금은 250개 전부 일치한다.
+      </div>
+    </div>
+    <div class="fix">
+      <div class="h">대질이 답을 그냥 건넸다</div>
+      <div class="b">
+        마지막 마디가 「…거기 없었어요. 인정할게요」였고 요약문은
+        <span class="was">「알리바이가 거짓임이 확정된다. 결정타 단서로 가는 길이 열린다」</span>였다.
+        어긋남만 기록에 올리고 판단은 플레이어에게 넘긴다.
+      </div>
+    </div>
+    <div class="fix">
+      <div class="h">나레이터가 플레이어에게 숙제를 냈다</div>
+      <div class="b">
+        <span class="was">「누가 누구를 감싸는지 적어 두어라」</span> — 이야기가 아니라 사용설명서다. 장면만 그려 주도록 바꿨다.
+      </div>
+    </div>
+    <div class="fix">
+      <div class="h">장소 id가 겹치고 지도 밖에 놓였다</div>
+      <div class="b">
+        장소를 늘리는 스크립트가 루프 번호로 id를 지어 두 번 돌리면 같은 id를 또 만들었고,
+        새 장소를 무리 밖에 두어 <span class="was">이동 가능한 장소 쌍이 21개 중 3개</span>가 된 편이 있었다.
+        빈 자리를 찾아 id를 짓고, 새 장소는 기존 무리 안에 놓는다.
+      </div>
+    </div>
+    <div class="fix">
+      <div class="h">별점이 변별을 잃었다</div>
+      <div class="b">
+        난이도가 올라가면서 <span class="was">50편 중 26편이 ★5</span>로 몰렸다.
+        현재 빌드의 실측 분포로 경계를 다시 잡아 각 등급에 열 편씩 들어가게 했다.
+      </div>
+    </div>
+  </div>
+
+  <h4>검증 현황</h4>
+  <div class="scroll">
+  <table>
+    <thead><tr><th>검사</th><th>보는 것</th><th class="num">결과</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">run_all</td><td>논리·난이도·플레이가능·자기오류·비밀도달·UX·관계 + 54항목</td><td class="num">50 / 50</td></tr>
+      <tr><td class="mono">fe_lint</td><td>프론트 연동 9개 항목</td><td class="num">0건</td></tr>
+      <tr><td class="mono">ux_lint</td><td>게임 요소가 실제로 작동하는가</td><td class="num">0건</td></tr>
+      <tr><td class="mono">eval_play</td><td>한 판이 끝까지 굴러가는가</td><td class="num">49 / 50</td></tr>
+      <tr><td class="mono">eval_policies</td><td>성급한 지목이 맞아떨어지지 않는가</td><td class="num">0건</td></tr>
+      <tr><td class="mono">agent_lint</td><td>인물 카드에 자백 어휘가 새지 않았는가</td><td class="num">50 / 50</td></tr>
+      <tr><td class="mono">relation_lint</td><td>관계 서술이 상투구가 아닌가</td><td class="num">50 / 50</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<footer>
+  <p>
+    기준 시나리오는 91편 「여섯 잔의 회의」다.
+    이 편은 실존 인물을 소재로 한 시연용이므로, 외부 공개 전에 등장하는 여섯 사람 모두의 동의가 필요하다.
+    작중 비밀·동기·범행은 전부 허구다.
+  </p>
+</footer>
+
+</div>

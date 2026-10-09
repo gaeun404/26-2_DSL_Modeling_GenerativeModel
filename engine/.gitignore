@@ -1,0 +1,17 @@
+# 키 — 절대 올리지 않는다
+.apikey
+*.key
+.env
+
+# 실행 중 생기는 것
+.runtime/
+__pycache__/
+*.pyc
+llm_playtest_*.json
+out_play/
+out_notebook/
+
+# 편집기
+.vscode/
+.idea/
+.DS_Store
