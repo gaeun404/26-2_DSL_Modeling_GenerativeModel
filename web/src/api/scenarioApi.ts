@@ -1,5 +1,5 @@
 /*
-  scenarioApi.ts — 백엔드(Gaeun/server.py)와 이야기하는 곳.
+  scenarioApi.ts — 백엔드(engine/server.py)와 이야기하는 곳.
 
   ■ 한 판이 한 세션이다.
     POST /session 으로 판을 열면 session_id 가 나온다.

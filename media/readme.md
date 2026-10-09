@@ -40,7 +40,7 @@ scontrol show node <노드이름> | grep -i gres
 ## 1. 환경 설치 (최초 1회)
 
 ```bash
-cd ~/26-2_Modeling_GenerativeModel/Jaemin
+cd ~/26-2_DSL_Modeling_GenerativeModel/media
 bash setup_envs.sh          # sa3 / ace / img 3개 모두
 # 또는 하나만: bash setup_envs.sh img
 ```
@@ -61,7 +61,7 @@ export HF_HOME=/mnt/data1/$USER/mystery/hf_cache
 ## 2. 배치 실행 (기본 방법)
 
 ```bash
-cd ~/26-2_Modeling_GenerativeModel/Jaemin
+cd ~/26-2_DSL_Modeling_GenerativeModel/media
 bash submit.sh img       # 또는 ace / sa3
 ```
 

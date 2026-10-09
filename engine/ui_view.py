@@ -6,7 +6,7 @@
 두 개이며, 무엇보다 **정답이 들어 있다** — is_culprit·solution·points_to·
 reveal_sequence.
 
-프론트(Seohyun/UI)가 읽는 모양은 다르다. `src/types/scenario.ts` 가 그 계약이다.
+프론트(web/)가 읽는 모양은 다르다. `src/types/scenario.ts` 가 그 계약이다.
 이 파일이 둘 사이를 옮긴다. 옮기면서 두 가지를 한다.
 
   ① **정답을 뗀다.** 지목(POST /accuse) 전까지 브라우저로 나가는 것에는

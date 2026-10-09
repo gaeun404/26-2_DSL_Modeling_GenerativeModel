@@ -7,7 +7,7 @@ GPU 는 RTX 6000 Ada (49GB, **compute capability 8.9**) 라 FP8 이 되고, FLUX
 
 ```bash
 # 0. 저장소를 $HOME(=/data1/$USER) 아래에 두고, 로그인 노드에서
-cd ~/26-2_Modeling_GenerativeModel/Jaemin/slurm
+cd ~/26-2_DSL_Modeling_GenerativeModel/media/slurm
 
 # 1. 사전 점검 (아무것도 안 바꾼다). 디스크 170GB 확보가 관건
 ./probe.sh
